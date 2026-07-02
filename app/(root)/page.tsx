@@ -1,8 +1,11 @@
 import React from 'react'
 
-const Page = () => {
+const Home = () => {
     return (
-        <div>Page</div>
+        <div className='flex min-h-screen home-wrapper'>
+HOME
+
+        </div>
     )
 }
-export default Page
+export default Home
