@@ -1,11 +1,15 @@
+import React from 'react'
+import Header from "@/components/Header";
 
-import React from "react";
-
-const Layout = async ({ children }: { children : React.ReactNode }) => {
-
-
+const Layout = ({children}:{children:React.ReactNode}) => {
     return (
-<h1 className='text-4xl'>LAYOUT</h1>
+        <main className='min-h-screen text-gray-400'>
+        <Header/>
+            <div className='container py-10'>
+                {children}
+            </div>
+
+        </main>
     )
 }
 export default Layout

@@ -1,8 +1,11 @@
 import React from 'react'
+import {Button} from "@base-ui/react";
 
-const Page = () => {
+const Home = () => {
     return (
-        <div>Page</div>
+        <div className='flex min-h-screen home-wrapper'>
+            <Button>Home</Button>
+        </div>
     )
 }
-export default Page
+export default Home
