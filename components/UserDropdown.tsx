@@ -32,11 +32,17 @@ const UserDropdown = () => {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className='flex items-center gap-3 text-gray-4
                 hover:text-yellow-400'>
-                <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
+                <Avatar className='h-8 w-8'>
 
+                    <AvatarImage src='./assets/images/ilya.jpg' />
+                    <AvatarFallback className='bg-yellow-500 text-yellow-900 text-sm font-bold'>
+                        {user.name[0]}
+                    </AvatarFallback>
                 </Avatar>
+
+
+
+
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
