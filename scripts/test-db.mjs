@@ -1,30 +1,39 @@
-import 'dotenv/config';
+import dns from 'node:dns';
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
-async function main() {
-    const uri = process.env.MONGODB_URI;
-    if (!uri) {
-        console.error('ERROR: MONGODB_URI must be set in .env');
-        process.exit(1);
-    }
+dotenv.config({ path: '.env.local' });
 
-    try {
-        const startedAt = Date.now();
-        await mongoose.connect(uri, { bufferCommands: false });
-        const elapsed = Date.now() - startedAt;
+// Force Node to use stable public DNS
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
-        const dbName = mongoose.connection?.name || '(unknown)';
-        const host = mongoose.connection?.host || '(unknown)';
+const MONGODB_URI = process.env.MONGODB_URI;
 
-        console.log(`OK: Connected to MongoDB [db="${dbName}", host="${host}", time=${elapsed}ms]`);
-        await mongoose.connection.close();
-        process.exit(0);
-    } catch (err) {
-        console.error('ERROR: Database connection failed');
-        console.error(err);
-        try { await mongoose.connection.close(); } catch {}
-        process.exit(1);
-    }
+if (!MONGODB_URI) {
+    console.error('ERROR: MONGODB_URI is missing');
+    process.exit(1);
 }
 
-main();
+try {
+    console.log('Testing MongoDB DNS SRV...');
+
+    const srvRecords = await dns.promises.resolveSrv(
+        '_mongodb._tcp.cluster264.hvpuxoz.mongodb.net'
+    );
+
+    console.log('DNS SRV records found:', srvRecords.length);
+
+    await mongoose.connect(MONGODB_URI, {
+        bufferCommands: false,
+        serverSelectionTimeoutMS: 10000,
+    });
+
+    console.log('Database connected successfully');
+
+    await mongoose.disconnect();
+    process.exit(0);
+} catch (error) {
+    console.error('ERROR: Database connection failed');
+    console.error(error);
+    process.exit(1);
+}
