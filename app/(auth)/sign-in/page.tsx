@@ -1,12 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import InputField from "@/components/forms/InputField";
 import FooterLink from "@/components/forms/FooterLink";
 import { signInWithEmail } from "@/lib/actions/auth.actions";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 const SignIn = () => {
     const router = useRouter();
@@ -14,7 +15,10 @@ const SignIn = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: {
+            errors,
+            isSubmitting,
+        },
     } = useForm<SignInFormData>({
         defaultValues: {
             email: "",
@@ -29,39 +33,52 @@ const SignIn = () => {
 
             if (!result.success) {
                 toast.error("Sign in failed", {
-                    description: result.error || "Failed to sign in.",
+                    description:
+                        result.error || "Failed to sign in.",
                 });
 
                 return;
             }
 
+            toast.success("Welcome back!");
+
             router.replace("/");
             router.refresh();
-        } catch (e) {
-            console.error(e);
+        } catch (error) {
+            console.error("SIGN_IN_FORM_ERROR:", error);
 
             toast.error("Sign in failed", {
-                description: e instanceof Error ? e.message : "Failed to sign in.",
+                description:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to sign in.",
             });
         }
     };
 
     return (
         <>
-            <h1 className="form-title">Welcome back</h1>
+            <h1 className="form-title">
+                Welcome back
+            </h1>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="space-y-5"
+                noValidate
+            >
                 <InputField
                     name="email"
                     label="Email"
                     placeholder="contact@jsmastery.com"
+                    type="email"
                     register={register}
                     error={errors.email}
                     validation={{
                         required: "Email is required",
                         pattern: {
                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Invalid email address",
+                            message: "Enter a valid email address",
                         },
                     }}
                 />
@@ -77,7 +94,8 @@ const SignIn = () => {
                         required: "Password is required",
                         minLength: {
                             value: 8,
-                            message: "Password must be at least 8 characters",
+                            message:
+                                "Password must be at least 8 characters",
                         },
                     }}
                 />
@@ -85,9 +103,11 @@ const SignIn = () => {
                 <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="yellow-btn w-full mt-5"
+                    className="yellow-btn mt-5 w-full"
                 >
-                    {isSubmitting ? "Signing In..." : "Sign In"}
+                    {isSubmitting
+                        ? "Signing In..."
+                        : "Sign In"}
                 </Button>
 
                 <FooterLink
