@@ -1,7 +1,12 @@
 "use client";
 
+<<<<<<< HEAD
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+=======
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+>>>>>>> d72c697 (auth)
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -10,13 +15,21 @@ import SelectField from "@/components/forms/SelectField";
 import { CountrySelectField } from "@/components/forms/CountrySelectField";
 import FooterLink from "@/components/forms/FooterLink";
 
+<<<<<<< HEAD
 import { signUpWithEmail } from "@/lib/actions/auth.actions";
 
+=======
+>>>>>>> d72c697 (auth)
 import {
     INVESTMENT_GOALS,
     PREFERRED_INDUSTRIES,
     RISK_TOLERANCE_OPTIONS,
 } from "@/lib/constants";
+<<<<<<< HEAD
+=======
+
+import { signUpWithEmail } from "@/lib/actions/auth.actions";
+>>>>>>> d72c697 (auth)
 
 const SignUp = () => {
     const router = useRouter();
@@ -43,6 +56,7 @@ const SignUp = () => {
     });
 
     const onSubmit = async (data: SignUpFormData) => {
+<<<<<<< HEAD
         try {
             const result = await signUpWithEmail(data);
 
@@ -70,6 +84,22 @@ const SignUp = () => {
                         : "Failed to create an account.",
             });
         }
+=======
+        const result = await signUpWithEmail(data);
+
+        if (!result.success) {
+            toast.error("Sign up failed", {
+                description: result.error || "Failed to create an account.",
+            });
+
+            return;
+        }
+
+        toast.success("Account created successfully");
+
+        router.replace("/");
+        router.refresh();
+>>>>>>> d72c697 (auth)
     };
 
     return (
@@ -93,8 +123,12 @@ const SignUp = () => {
                         required: "Full name is required",
                         minLength: {
                             value: 2,
+<<<<<<< HEAD
                             message:
                                 "Full name must be at least 2 characters",
+=======
+                            message: "Full name must be at least 2 characters",
+>>>>>>> d72c697 (auth)
                         },
                     }}
                 />
@@ -110,7 +144,11 @@ const SignUp = () => {
                         required: "Email is required",
                         pattern: {
                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+<<<<<<< HEAD
                             message: "Enter a valid email address",
+=======
+                            message: "Invalid email address",
+>>>>>>> d72c697 (auth)
                         },
                     }}
                 />
@@ -126,8 +164,12 @@ const SignUp = () => {
                         required: "Password is required",
                         minLength: {
                             value: 8,
+<<<<<<< HEAD
                             message:
                                 "Password must be at least 8 characters",
+=======
+                            message: "Password must be at least 8 characters",
+>>>>>>> d72c697 (auth)
                         },
                     }}
                 />
@@ -173,11 +215,17 @@ const SignUp = () => {
                 <Button
                     type="submit"
                     disabled={isSubmitting}
+<<<<<<< HEAD
                     className="yellow-btn mt-5 w-full"
                 >
                     {isSubmitting
                         ? "Creating Account..."
                         : "Start Your Investing Journey"}
+=======
+                    className="yellow-btn w-full mt-5"
+                >
+                    {isSubmitting ? "Creating Account..." : "Start Your Investing Journey"}
+>>>>>>> d72c697 (auth)
                 </Button>
 
                 <FooterLink
