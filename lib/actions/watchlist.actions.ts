@@ -64,9 +64,74 @@ export const getCurrentUserWatchlistSymbols = async (): Promise<
             { symbol: 1, _id: 0 }
         ).lean();
 
-        return items.map((item) => String(item.symbol));
+        return items.map((item) =>
+            String(item.symbol).toUpperCase()
+        );
     } catch (error) {
         console.error("GET_WATCHLIST_SYMBOLS_ERROR:", error);
+        return [];
+    }
+};
+
+export const getWatchlistSymbolsByEmail = async (
+    email: string
+): Promise<string[]> => {
+    try {
+        const normalizedEmail = email.trim().toLowerCase();
+
+        if (!normalizedEmail) {
+            return [];
+        }
+
+        const mongoose = await connectToDatabase();
+        const db = mongoose.connection.db;
+
+        if (!db) {
+            throw new Error("Mongoose connection is not available");
+        }
+
+        const user = await db.collection("user").findOne(
+            {
+                email: normalizedEmail,
+            },
+            {
+                projection: {
+                    _id: 1,
+                    id: 1,
+                },
+            }
+        );
+
+        if (!user) {
+            console.warn(
+                `GET_WATCHLIST_BY_EMAIL: User not found for ${normalizedEmail}`
+            );
+
+            return [];
+        }
+
+        const userId = String(
+            user.id || user._id?.toString() || ""
+        );
+
+        if (!userId) {
+            return [];
+        }
+
+        const items = await Watchlist.find(
+            { userId },
+            { symbol: 1, _id: 0 }
+        ).lean();
+
+        return items.map((item) =>
+            String(item.symbol).toUpperCase()
+        );
+    } catch (error) {
+        console.error(
+            "GET_WATCHLIST_SYMBOLS_BY_EMAIL_ERROR:",
+            error
+        );
+
         return [];
     }
 };
@@ -81,7 +146,8 @@ export const addStockToWatchlist = async ({
     const userId = await getCurrentUserId();
 
     const normalizedSymbol = symbol.trim().toUpperCase();
-    const normalizedCompany = company.trim() || normalizedSymbol;
+    const normalizedCompany =
+        company.trim() || normalizedSymbol;
 
     if (!normalizedSymbol) {
         throw new Error("Stock symbol is required");
