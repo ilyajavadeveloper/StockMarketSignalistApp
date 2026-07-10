@@ -8,7 +8,7 @@ import {
     COMPANY_PROFILE_WIDGET_CONFIG,
     COMPANY_FINANCIALS_WIDGET_CONFIG,
 } from "@/lib/constants";
-import WatchlistButton from "@/components/ui/WatchlistButton";
+import WatchlistButton from "@/components/WatchlistButton";
 
 export default async function StockDetails({ params }: StockDetailsPageProps) {
     const { symbol } = await params;
